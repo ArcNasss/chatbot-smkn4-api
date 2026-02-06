@@ -1,0 +1,212 @@
+{
+  "profil": {
+    "nama": "SMK Negeri 4 Bojonegoro",
+    "alamat": "Jl. Raya Surabaya Sukowati, Kapas, Bojonegoro, Jawa Timur",
+    "tahun_berdiri": 2004,
+    "jumlah_kelas_total": 13,
+    "jumlah_siswa": 1389,
+    "siswa_laki_laki": 833,
+    "siswa_perempuan": 556,
+    "kepala_sekolah": "Abdul Fatah, S.Pd. M.MPd.",
+    "telpon": "(0353) 892418",
+    "email": "smkn4bjn@gmail.com",
+    "instagram": "@official_smkn4bojonegoro",
+    "website": "https://smkn4bojonegoro.sch.id",
+    "akreditasi": "A",
+    "luas": "16.944,82 m²",
+    "jumlah_guru": "lebih dari 100",
+    "unit_produksi": [
+      "Teknik Pengelasan",
+      "Geologi Pertambangan",
+      "Rekayasa Perangkat Lunak",
+      "Agribisnis Ternak Ruminansia",
+      "Kuliner",
+      "Perhotelan"
+    ]
+  },
+  "jurusan": [
+    "Rekayasa Perangkat Lunak",
+    "Kuliner",
+    "Teknik Pengelasan",
+    "Geologi Pertambangan",
+    "Perhotelan",
+    "Agribisnis Ternak Ruminansia",
+    {
+      "nama": "Teknik Pengelasan",
+      "jumlah_kelas": 2
+    },
+    {
+      "nama": "Geologi Pertambangan",
+      "jumlah_kelas": 1
+    },
+    {
+      "nama": "Rekayasa Perangkat Lunak",
+      "jumlah_kelas": 4
+    },
+    {
+      "nama": "Perhotelan",
+      "jumlah_kelas": 2
+    },
+    {
+      "nama": "Kuliner",
+      "jumlah_kelas": 2
+    },
+    {
+      "nama": "Agribisnis Ternak Ruminansia",
+      "jumlah_kelas": 2
+    }
+  ],
+  "prestasi": [
+    {
+      "judul": "Juara 3 Web Development Competition IT Fest IDN 2023",
+      "tahun": 2023,
+      "tim": [
+        "Muhammad Khoyron Ahlaqul Firdaus",
+        "Adn Al-Khoir",
+        "Littozuma Feba Luxgowo"
+      ],
+      "jurusan": "Rekayasa Perangkat Lunak"
+    },
+    {
+      "judul": "Juara 1 Kejuaraan Karate Piala DANDIM 0813 Bojonegoro",
+      "tahun": 2024,
+      "siswa": "Mochammad Alfin Khilman Nauval",
+      "kategori": "SMK‑60 kg putra"
+    },
+    {
+      "judul": "Juara 2 Kejuaraan Karate Open Junior DANDIM 0813",
+      "tahun": 2024,
+      "siswa": "M. Irvan Sayif",
+      "jurusan": "Teknik Pengelasan"
+    },
+    {
+      "judul": "Juara 1 Panggung Budaya Pramuka 2024 (Kwartir Cabang Bojonegoro)",
+      "tahun": 2024,
+      "tim": "Pramuka SMK Negeri 4 Bojonegoro"
+    },
+    {
+      "judul": "Juara 1 MTQ Kabupaten Tuban",
+      "tahun": 2024,
+      "siswa": "Nasril Ilham Saputra",
+      "jurusan": "Rekayasa Perangkat Lunak"
+    }
+  ],
+  "info_ppdb": {
+    "periode": "2025/2026",
+    "jurusan_baru": [
+      "Teknik Pengelasan",
+      "Geologi Pertambangan",
+      "Rekayasa Perangkat Lunak"
+    ],
+    "cara_daftar": "SPMB online melalui website resmi sekolah"
+  },
+  "alumni_kerja": {
+    "program_bkk": "BKK Migas SMKN 4 Bojonegoro mendampingi alumni memasuki dunia kerja",
+    "mitra": [
+      "Telkom",
+      "PT Prima Visi Globalindo",
+      "PT Humma Teknologi Indonesia"
+    ]
+  },
+  "kegiatan": [
+    {
+      "judul": "Job Fair & Edu Fair",
+      "tanggal": "28–29 Agustus 2024"
+    },
+    {
+      "judul": "Upacara HUT RI ke‑79",
+      "tanggal": "17 Agustus 2024"
+    },
+    {
+      "judul": "UKK Nasional 2025",
+      "tanggal": "20–25 Februari 2025"
+    },
+    {
+      "judul": "Sosialisasi SPMB ke SMP dan masyarakat",
+      "tanggal": "21 April 2025"
+    },
+    {
+      "judul": "Monitoring GAMELAB dan Kelas Industri",
+      "tanggal": "19 November 2024"
+    }
+  ],
+  "kontak": {
+    "website": "https://smkn4bojonegoro.sch.id",
+    "instagram ": "https://instagram.com/official_smkn4bojonegoro"
+  },
+  "data_guru": [
+    {
+      "nama": "Abdul Fatah S.Pd",
+      "jabatan": "Kepala Sekolah"
+    },
+    {
+      "nama": "Syamsul Anam S.Pd",
+      "jabatan": "Wakil Kepala Sekolah Bidang Kesiswaan"
+    }
+  ],
+  "fasilitas": [
+    "Ruang kelas (37)",
+    "Lapangan (3)",
+    "Perpustakaan",
+    "Laboratorium",
+    "Toilet (5)",
+    "UKS",
+    "Ruang OSIS",
+    "Ruang Pramuka",
+    "Koperasi",
+    "Hotel",
+    "Bengkel",
+    "Ruang BK",
+    "Ruang Auditorium",
+    "Lab Bahasa",
+    "Ruang Musik",
+    "Kantin",
+    "Smart Resto"
+  ],
+  "ekstrakurikuler": [
+    "PMR",
+    "Pramuka",
+    "Basket",
+    "Musik",
+    "Bahasa Inggris",
+    "Keagamaan",
+    "Voli",
+    "Futsal",
+    "Batminton",
+    "Tenis meja",
+    "Catur",
+    "Hadrah",
+    "Baca tulis Al-Qur’an",
+    "OSIS"
+  ],
+  "kegiatan_rutin": [
+    "Upacara hari Senin",
+    "Jum’at bersih",
+    "Upacara peringatan",
+    "Masa Pengenalan Lingkungan Sekolah (MPLS)",
+    "Perkemahan pramuka",
+    "Peringatan Hari Guru",
+    "Job Fair & Edu Fair",
+    "Pekan Projek Penguatan Profil Pelajar Pancasila (P5)",
+    "Hari Besar Islam & Keagamaan (Maulid Nabi, Nuzulul Qur’an, Isra’ Mi’raj dll.)"
+  ],
+  "mitra_industri": [
+    "PT. Japan Indonesian Economic Center (JIAEC) – Surabaya",
+    "PT. Medion Ardhika Bhakti – Bandung",
+    "Hotel Eastern Bojonegoro",
+    "Hotel Aston Bojonegoro",
+    "CV. Milkindo Berka Abadi – Malang",
+    "PT. Bhumi Naraya Farm – Sleman",
+    "PT. Lesinaja Edukasi Indonesia – Sidoarjo",
+    "CV. Aryatama (Amanah Solution) – Sidoarjo",
+    "PT. Humma Teknologi Indonesia – Malang",
+    "PT. Eduka Sisfomedia Indonesia (Gamelab) – Salatiga",
+    "PT. PAL Indonesia – Surabaya",
+    "PT. Bambang Djaja – Surabaya",
+    "PT. Asuka Engineering Indonesia – Gresik",
+    "Kampuh Welding Indonesia – Surabaya",
+    "PT. Usaha Bakti Perkasa – Sidoarjo",
+    "Cafe & Resto Omah Tepi Sawah – Bojonegoro",
+    "Warung Apung Rahmawati – Bojonegoro"
+  ]
+}
