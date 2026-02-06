@@ -30,7 +30,7 @@
    - Klik tab "Variables"
    - Klik "New Variable"
    - Name: `GROQ_API_KEY`
-   - Value: `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`
+   - Value: `<your-groq-api-key>` (paste API key Anda dari file .env)
    - Klik "Add"
 
 6. **Done!** Railway auto-detect Python & deploy
@@ -61,8 +61,8 @@ railway init
 # Deploy
 railway up
 
-# Add environment variable
-railway variables set GROQ_API_KEY=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
+# Add environment variable (ganti dengan API key Anda)
+railway variables set GROQ_API_KEY=your_groq_api_key_here
 
 # Generate public URL
 railway domain
