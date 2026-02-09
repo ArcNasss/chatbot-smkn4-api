@@ -32,6 +32,7 @@ context_text = json.dumps(school_data, indent=2, ensure_ascii=False)
 llm = ChatGroq(
     groq_api_key=GROQ_API_KEY,
     model_name="llama-3.3-70b-versatile"
+    
 )
 
 template = """
@@ -59,9 +60,25 @@ def read_root():
 
 @app.post("/ask")
 def ask_bot(query: Query):
-    full_prompt = prompt.format(context=context_text, question=query.question)
-    response = llm.invoke(full_prompt)
-    return {"jawaban": response.content}
+    try:
+        full_prompt = prompt.format(context=context_text, question=query.question)
+        response = llm.invoke(full_prompt)
+        return {"jawaban": response.content}
+    except Exception as e:
+        error_message = str(e)
+        
+        # Handle rate limit errors specifically
+        if "rate_limit_exceeded" in error_message.lower() or "429" in error_message:
+            return {
+                "jawaban": "Maaf, batas penggunaan API telah tercapai. Silakan coba lagi nanti atau hubungi administrator.",
+                "error": "rate_limit_exceeded"
+            }
+        
+        # Handle other errors
+        return {
+            "jawaban": "Maaf, terjadi kesalahan saat memproses pertanyaan Anda. Silakan coba lagi.",
+            "error": "internal_error"
+        }
 
 # For Vercel serverless
 app = app
