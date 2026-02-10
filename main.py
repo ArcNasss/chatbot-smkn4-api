@@ -1,18 +1,22 @@
-import os
-import json
-from pathlib import Path
+"""
+Main FastAPI Application
+Endpoint chatbot SMKN 4 Bojonegoro dengan arsitektur hemat token
+Architecture: Clean, modular, dan enterprise-ready
+"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from dotenv import load_dotenv
-from langchain.prompts import PromptTemplate
-from langchain_groq import ChatGroq
+from app.services.answer_service import answer_service
+from app.services.cache_service import cache_service
 
-load_dotenv()
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+# Initialize FastAPI app
+app = FastAPI(
+    title="Chatbot SMKN 4 Bojonegoro API",
+    description="API chatbot dengan arsitektur hemat token menggunakan hybrid answer system",
+    version="2.0"
+)
 
-app = FastAPI(title="Chatbot SMKN 4 Bojonegoro API")
-
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,65 +25,80 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load school data
-data_file = Path(__file__).parent / "data" / "info_sekolah.json"
-with open(data_file, "r", encoding="utf-8") as f:
-    school_data = json.load(f)
-
-# Convert to text context
-context_text = json.dumps(school_data, indent=2, ensure_ascii=False)
-
-llm = ChatGroq(
-    groq_api_key=GROQ_API_KEY,
-    model_name="llama-3.3-70b-versatile"
-    
-)
-
-template = """
-Kamu adalah chatbot resmi jurusan Rekayasa perangkat lunak SMKN 4 Bojonegoro, berbicara seolah menjawab langsung akan tetapi tanpa menyebut 'menurut data', buatlah cara bicaramu selayaknya manusia, sebaiknya jangan gunakan kata seperti "halo saya chatbot smkn 4 bojonegoro" disetiap pertanyaan, cukup ketika di tanya siapa kamu saja. Jawablah dengan jelas, profesional, dan sopan, dan yang paling penting gunakan bahasa indonesia.
-
-Data Sekolah:
-{context}
-
-Pertanyaan: {question}
-Jawaban:
-"""
-
-prompt = PromptTemplate(input_variables=["context", "question"], template=template)
-
+# Request model
 class Query(BaseModel):
     question: str
 
+# Response model untuk dokumentasi yang lebih baik
+class AnswerResponse(BaseModel):
+    jawaban: str
+    source: str = "llm"
+    metadata: dict = {}
+
 @app.get("/")
 def read_root():
+    """
+    Health check endpoint
+    """
     return {
         "message": "Chatbot SMKN 4 Bojonegoro API",
         "status": "online",
-        "version": "1.0"
+        "version": "2.0",
+        "architecture": "hybrid-answer-system",
+        "features": [
+            "Direct answer (no LLM)",
+            "Smart caching",
+            "Relevant data retrieval",
+            "Token-efficient LLM calls"
+        ]
     }
 
-@app.post("/ask")
+@app.post("/ask", response_model=AnswerResponse)
 def ask_bot(query: Query):
-    try:
-        full_prompt = prompt.format(context=context_text, question=query.question)
-        response = llm.invoke(full_prompt)
-        return {"jawaban": response.content}
-    except Exception as e:
-        error_message = str(e)
-        
-        # Handle rate limit errors specifically
-        if "rate_limit_exceeded" in error_message.lower() or "429" in error_message:
-            return {
-                "jawaban": "Maaf, batas penggunaan API telah tercapai. Silakan coba lagi nanti atau hubungi administrator.",
-                "error": "rate_limit_exceeded"
-            }
-        
-        # Handle other errors
-        return {
-            "jawaban": "Maaf, terjadi kesalahan saat memproses pertanyaan Anda. Silakan coba lagi.",
-            "error": "internal_error"
-        }
+    """
+    Main endpoint untuk bertanya
+    
+    Flow:
+    1. Coba direct answer (tanpa LLM) - HEMAT TOKEN
+    2. Check cache - HEMAT TOKEN
+    3. Retrieve relevant data only - HEMAT TOKEN
+    4. Call LLM with minimal context - TOKEN EFFICIENT
+    
+    Returns:
+    - jawaban: Jawaban dari sistem
+    - source: "direct" | "cache" | "llm" | "fallback"
+    - metadata: Informasi tambahan tentang proses
+    """
+    result = answer_service.get_answer(query.question)
+    return result
 
-# For Vercel serverless
+@app.get("/stats")
+def get_stats():
+    """
+    Endpoint untuk melihat statistik penggunaan
+    Berguna untuk monitoring efisiensi token
+    """
+    return {
+        "answer_service": answer_service.get_stats(),
+        "cache_service": cache_service.stats()
+    }
+
+@app.post("/cache/clear")
+def clear_cache():
+    """
+    Endpoint untuk membersihkan cache (admin only in production)
+    """
+    cache_service.clear()
+    return {"message": "Cache cleared successfully"}
+
+@app.post("/stats/reset")
+def reset_stats():
+    """
+    Reset statistik answer service (admin only in production)
+    """
+    answer_service.reset_stats()
+    return {"message": "Statistics reset successfully"}
+
+# For Vercel serverless compatibility
 app = app
 

@@ -5,6 +5,7 @@ WORKDIR /app
 # Copy files
 COPY requirements.txt .
 COPY main.py .
+COPY app/ ./app/
 COPY data/ ./data/
 
 # Install dependencies
