@@ -69,52 +69,42 @@ class AnswerService:
         # STEP 3: Retrieve relevant data
         retrieved_data = self.retrieval.retrieve_relevant_data(question)
         
+        # STEP 4: Panggil LLM dengan atau tanpa context
         if not retrieved_data:
-            # Tidak ada context relevan
+            # Tidak ada context spesifik, tapi coba jawab dengan pengetahuan umum
             self.stats["no_context_found"] += 1
-            fallback_message = "Maaf, saya tidak memiliki informasi tentang itu. Silakan tanyakan tentang profil sekolah, jurusan, atau fasilitas SMKN 4 Bojonegoro."
-            
-            # Cache fallback message juga
-            self.cache.set(question, fallback_message)
-            
-            return {
-                "jawaban": fallback_message,
-                "source": "fallback",
-                "metadata": {
-                    "llm_used": False,
-                    "reason": "no_relevant_context"
-                }
-            }
+            answer = self._call_llm_general(question)
+        else:
+            # Ada context relevan
+            context = self.retrieval.format_context(retrieved_data)
+            answer = self._call_llm(question, context)
+            self.stats["llm_calls"] += 1
         
-        # STEP 4: Format context dan panggil LLM
-        context = self.retrieval.format_context(retrieved_data)
-        answer = self._call_llm(question, context)
-        
-        # Cache hasil LLM
+        # Cache hasil
         self.cache.set(question, answer)
-        self.stats["llm_calls"] += 1
         
         return {
             "jawaban": answer,
             "source": "llm",
             "metadata": {
                 "llm_used": True,
-                "context_length": len(context),
-                "retrieved_keyword": retrieved_data.get("keyword", "")
+                "context_available": retrieved_data is not None,
+                "context_length": len(self.retrieval.format_context(retrieved_data)) if retrieved_data else 0
             }
         }
     
     def _call_llm(self, question: str, context: str) -> str:
         """
-        Memanggil LLM dengan prompt yang ringkas
+        Memanggil LLM dengan context dari data sekolah
         """
-        # Prompt yang sangat ringkas untuk hemat token
         prompt = f"""{SYSTEM_PROMPT}
 
-Data: {context}
+Data sekolah:
+{context}
 
-Q: {question}
-A:"""
+Pertanyaan: {question}
+
+Jawab dengan gaya natural dan informatif:"""
         
         try:
             response = self.llm.invoke(prompt)
@@ -122,12 +112,35 @@ A:"""
         except Exception as e:
             error_message = str(e)
             
-            # Handle rate limit
             if "rate_limit_exceeded" in error_message.lower() or "429" in error_message:
                 return "Maaf, batas penggunaan API tercapai. Silakan coba lagi nanti."
             
-            # Handle error lain
             return "Maaf, terjadi kesalahan saat memproses pertanyaan."
+    
+    def _call_llm_general(self, question: str) -> str:
+        """
+        Memanggil LLM tanpa context spesifik
+        Untuk pertanyaan yang tidak ada di data tapi masih relevan dengan sekolah
+        """
+        prompt = f"""{SYSTEM_PROMPT}
+
+Pertanyaan: {question}
+
+Catatan: Jika pertanyaan tentang SMKN 4 Bojonegoro tapi tidak ada data spesifik, jawab dengan pengetahuan umum tentang SMK atau topik terkait. Jika benar-benar tidak relevan dengan sekolah, beritahu dengan sopan dan sarankan topik yang bisa ditanyakan.
+
+Jawab:"""
+        
+        try:
+            response = self.llm.invoke(prompt)
+            return response.content.strip()
+        except Exception as e:
+            error_message = str(e)
+            
+            if "rate_limit_exceeded" in error_message.lower() or "429" in error_message:
+                return "Maaf, batas penggunaan API tercapai. Silakan coba lagi nanti."
+            
+            return "Maaf, pertanyaan Anda di luar cakupan informasi yang saya miliki tentang SMKN 4 Bojonegoro. Silakan tanyakan tentang profil sekolah, jurusan, fasilitas, atau hal terkait SMK."
+    
     
     def get_stats(self) -> Dict[str, Any]:
         """

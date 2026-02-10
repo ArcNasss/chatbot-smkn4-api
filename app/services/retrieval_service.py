@@ -21,13 +21,19 @@ class RetrievalService:
             # Profile sekolah
             "nama": ["profile", "nama"],
             "alamat": ["profile", "alamat"],
+            "lokasi": ["profile", "alamat"],
             "kepala sekolah": ["profile", "kepala_sekolah"],
             "kepsek": ["profile", "kepala_sekolah"],
             "siswa": ["profile", "jumlah_siswa"],
+            "murid": ["profile", "jumlah_siswa"],
             "guru": ["profile", "jumlah_guru"],
+            "pengajar": ["profile", "jumlah_guru"],
             "akreditasi": ["profile", "akreditasi"],
             "visi": ["profile", "visi"],
             "misi": ["profile", "misi"],
+            "profile": ["profile"],
+            "profil": ["profile"],
+            "sejarah": ["profile"],
             
             # Jurusan
             "jurusan": ["jurusan"],
@@ -37,6 +43,12 @@ class RetrievalService:
             "multimedia": ["jurusan", "MM"],
             "mm": ["jurusan", "MM"],
             "teknik komputer": ["jurusan", "TKJ"],
+            "jaringan": ["jurusan", "TKJ"],
+            "software": ["jurusan", "RPL"],
+            "aplikasi": ["jurusan", "RPL"],
+            "desain": ["jurusan", "MM"],
+            "video": ["jurusan", "MM"],
+            "animasi": ["jurusan", "MM"],
             
             # Fasilitas
             "fasilitas": ["fasilitas"],
@@ -45,6 +57,10 @@ class RetrievalService:
             "perpustakaan": ["fasilitas"],
             "masjid": ["fasilitas"],
             "wifi": ["fasilitas"],
+            "internet": ["fasilitas"],
+            "komputer": ["fasilitas"],
+            "gedung": ["fasilitas"],
+            "ruang": ["fasilitas"],
         }
     
     def _load_data(self) -> Dict[str, Any]:
@@ -131,7 +147,7 @@ class RetrievalService:
     def get_direct_answer(self, question: str) -> Optional[str]:
         """
         Coba jawab langsung tanpa LLM untuk pertanyaan sederhana
-        Return None jika perlu LLM
+        Return None jika perlu LLM untuk penjelasan lebih detail
         """
         question_lower = question.lower()
         
@@ -139,44 +155,63 @@ class RetrievalService:
         
         # Nama sekolah
         if "nama sekolah" in question_lower or "nama smk" in question_lower:
-            return self.data.get("profile", {}).get("nama", None)
+            nama = self.data.get("profile", {}).get("nama", None)
+            if nama:
+                return f"{nama} adalah sekolah menengah kejuruan yang berlokasi di Bojonegoro."
         
         # Alamat
-        if "alamat" in question_lower and "di mana" in question_lower:
+        if "alamat" in question_lower or "di mana" in question_lower or "dimana" in question_lower:
             alamat = self.data.get("profile", {}).get("alamat", None)
             if alamat:
-                return f"SMKN 4 Bojonegoro berlokasi di {alamat}"
+                return f"SMKN 4 Bojonegoro berlokasi di {alamat}. Sekolah ini mudah diakses dan berada di lokasi strategis."
         
         # Kepala sekolah
         if "kepala sekolah" in question_lower or "kepsek" in question_lower:
             kepsek = self.data.get("profile", {}).get("kepala_sekolah", None)
             if kepsek:
-                return f"Kepala sekolah SMKN 4 Bojonegoro adalah {kepsek}"
+                return f"Kepala Sekolah SMKN 4 Bojonegoro saat ini adalah {kepsek}."
         
         # Jumlah siswa
         if "berapa siswa" in question_lower or "jumlah siswa" in question_lower:
             siswa = self.data.get("profile", {}).get("jumlah_siswa", None)
             if siswa:
-                return f"SMKN 4 Bojonegoro memiliki {siswa} siswa"
+                return f"SMKN 4 Bojonegoro memiliki {siswa} siswa yang tersebar di berbagai jurusan."
         
         # Jumlah guru
         if "berapa guru" in question_lower or "jumlah guru" in question_lower:
             guru = self.data.get("profile", {}).get("jumlah_guru", None)
             if guru:
-                return f"SMKN 4 Bojonegoro memiliki {guru} guru"
+                return f"Sekolah ini memiliki {guru} guru profesional yang siap membimbing siswa."
         
-        # List jurusan
-        if "jurusan apa" in question_lower or "ada jurusan" in question_lower:
+        # List jurusan - lebih detail
+        if ("jurusan apa" in question_lower or "ada jurusan" in question_lower or 
+            "jurusan yang tersedia" in question_lower or "jurusan di" in question_lower):
             jurusan_data = self.data.get("jurusan", {})
             if jurusan_data:
                 jurusan_list = list(jurusan_data.keys())
-                return f"Jurusan di SMKN 4 Bojonegoro: {', '.join(jurusan_list)}"
+                return f"SMKN 4 Bojonegoro memiliki {len(jurusan_list)} jurusan unggulan: {', '.join(jurusan_list)}. Semua jurusan dirancang untuk mempersiapkan siswa memasuki dunia kerja atau melanjutkan kuliah."
         
         # Akreditasi
         if "akreditasi" in question_lower:
             akred = self.data.get("profile", {}).get("akreditasi", None)
             if akred:
-                return f"SMKN 4 Bojonegoro berakreditasi {akred}"
+                return f"SMKN 4 Bojonegoro berakreditasi {akred}, yang menunjukkan kualitas pendidikan yang baik dan terstandar."
+        
+        # Visi
+        if "visi" in question_lower and "misi" not in question_lower:
+            visi = self.data.get("profile", {}).get("visi", None)
+            if visi:
+                return f"Visi SMKN 4 Bojonegoro: {visi}"
+        
+        # Tambahan: Pertanyaan umum tentang jurusan tanpa data spesifik
+        if "apa itu rpl" in question_lower or "rpl itu apa" in question_lower:
+            return None  # Biarkan LLM jelaskan dengan lebih baik
+        
+        if "apa itu tkj" in question_lower or "tkj itu apa" in question_lower:
+            return None  # Biarkan LLM jelaskan dengan lebih baik
+        
+        if "apa itu mm" in question_lower or "multimedia itu apa" in question_lower:
+            return None  # Biarkan LLM jelaskan dengan lebih baik
         
         return None
 

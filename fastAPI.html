@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="chat-box" id="chatBox"></div>
+    <br>
+    <input type="text" id="questionInput" placeholder="Ask your question here" onkeypress="if(event.key === 'Enter') sendQuestion()">
+    <button onclick="sendQuestion()" id="sendBtn">kirim</button>
+
+    <script>
+        const apiURL = 'https://nasssl-chatbot-smkn4-api.hf.space/ask';
+
+        async function sendQuestion(){
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+
+
+
+            addMessage(question, 'user-message');
+            input.value  = '';
+
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<div class="loading"></div>';
+
+            try{
+                const response = await fetch(apiURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({question:question})
+                });
+
+
+                const data = await response.json();
+
+                addMessage(data.jawaban, 'bot-message');
+
+            } catch(error){
+                console.log(error);
+
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = 'kirim';
+            }
+            
+        }
+
+        function addMessage(text, className){
+            const chatBox = document.getElementById('chatBox');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.innerText = text;
+            chatBox.appendChild(messageDiv);
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
